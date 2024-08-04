@@ -1,7 +1,8 @@
 package com.example.unittestexample.repository;
 
-import com.example.unittestexample.model.UserStatus;
-import org.junit.jupiter.api.DisplayName;
+import com.example.unittestexample.user.domain.UserStatus;
+import com.example.unittestexample.user.infrastructure.UserEntity;
+import com.example.unittestexample.user.infrastructure.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -11,7 +12,6 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest(showSql = true)
 @TestPropertySource("classpath:test-application.yml")

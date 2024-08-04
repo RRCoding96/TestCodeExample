@@ -1,13 +1,11 @@
 package com.example.unittestexample.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.unittestexample.model.dto.UserCreateDto;
+import com.example.unittestexample.user.domain.UserCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -41,7 +39,7 @@ public class UserCreateControllerTest {
     @Test
     void 사용자는_회원_가입을_할_수있고_회원가입된_사용자는_PENDING_상태이다() throws Exception {
         // given
-        UserCreateDto userCreateDto = UserCreateDto.builder()
+        UserCreate userCreate = UserCreate.builder()
             .email("kok202@kakao.com")
             .nickname("kok202")
             .address("Pangyo")
@@ -53,7 +51,7 @@ public class UserCreateControllerTest {
         mockMvc.perform(
                 post("/api/users")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(userCreateDto)))
+                    .content(objectMapper.writeValueAsString(userCreate)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").isNumber())
             .andExpect(jsonPath("$.email").value("kok202@kakao.com"))

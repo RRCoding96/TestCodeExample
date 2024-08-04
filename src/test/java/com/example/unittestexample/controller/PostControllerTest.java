@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.unittestexample.model.dto.PostUpdateDto;
+import com.example.unittestexample.post.domain.PostUpdate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -60,7 +58,7 @@ public class PostControllerTest {
     @Test
     void 사용자는_게시물을_수정할_수_있다() throws Exception {
         // given
-        PostUpdateDto postUpdateDto = PostUpdateDto.builder()
+        PostUpdate postUpdate = PostUpdate.builder()
             .content("foobar")
             .build();
 
@@ -69,7 +67,7 @@ public class PostControllerTest {
         mockMvc.perform(
                 put("/api/posts/1")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(postUpdateDto)))
+                    .content(objectMapper.writeValueAsString(postUpdate)))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").isNumber())
             .andExpect(jsonPath("$.content").value("foobar"))

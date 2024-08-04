@@ -1,11 +1,12 @@
 package com.example.unittestexample.service;
 
-import com.example.unittestexample.exception.CertificationCodeNotMatchedException;
-import com.example.unittestexample.exception.ResourceNotFoundException;
-import com.example.unittestexample.model.UserStatus;
-import com.example.unittestexample.model.dto.UserCreateDto;
-import com.example.unittestexample.model.dto.UserUpdateDto;
-import com.example.unittestexample.repository.UserEntity;
+import com.example.unittestexample.common.domain.exception.CertificationCodeNotMatchedException;
+import com.example.unittestexample.common.domain.exception.ResourceNotFoundException;
+import com.example.unittestexample.user.domain.UserStatus;
+import com.example.unittestexample.user.domain.UserCreate;
+import com.example.unittestexample.user.domain.UserUpdate;
+import com.example.unittestexample.user.infrastructure.UserEntity;
+import com.example.unittestexample.user.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -84,7 +83,7 @@ class UserServiceTest {
     @Test
     void userCreateDto_를_이용하여_유저를_생성할_수_있다() {
         // given
-        UserCreateDto userCreateDto = UserCreateDto.builder()
+        UserCreate userCreate = UserCreate.builder()
             .email("kok202@kakao.com")
             .address("Gyeongi")
             .nickname("kok202-k")
@@ -92,7 +91,7 @@ class UserServiceTest {
         BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
         // when
-        UserEntity result = userService.create(userCreateDto);
+        UserEntity result = userService.create(userCreate);
 
         // then
         assertThat(result.getId()).isNotNull();
@@ -103,13 +102,13 @@ class UserServiceTest {
     @Test
     void userUpdateDto_를_이용하여_유저를_수정할_수_있다() {
         // given
-        UserUpdateDto userUpdateDto = UserUpdateDto.builder()
+        UserUpdate userUpdate = UserUpdate.builder()
             .address("Incheon")
             .nickname("kok202-n")
             .build();
 
         // when
-        userService.update(1, userUpdateDto);
+        userService.update(1, userUpdate);
 
         // then
         UserEntity userEntity = userService.getById(1);
