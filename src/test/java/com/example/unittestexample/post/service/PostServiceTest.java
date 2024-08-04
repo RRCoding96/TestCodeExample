@@ -1,4 +1,4 @@
-package com.example.unittestexample.service;
+package com.example.unittestexample.post.service;
 
 import com.example.unittestexample.post.domain.PostCreate;
 import com.example.unittestexample.post.domain.PostUpdate;
