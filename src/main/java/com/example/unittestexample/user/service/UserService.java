@@ -2,6 +2,8 @@ package com.example.unittestexample.user.service;
 
 import com.example.unittestexample.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.unittestexample.common.domain.exception.ResourceNotFoundException;
+import com.example.unittestexample.common.service.ClockHolder;
+import com.example.unittestexample.common.service.UuidHolder;
 import com.example.unittestexample.user.domain.User;
 import com.example.unittestexample.user.domain.UserStatus;
 import com.example.unittestexample.user.domain.UserCreate;
@@ -24,6 +26,8 @@ public class UserService {
 
     private final UserRepsitory userRepsitory;
     private final CertificationService certificationService;
+    private final UuidHolder uuidHolder;
+    private final ClockHolder clockHolder;
 
     public User getByEmail(String email) {
         return userRepsitory.findByEmailAndStatus(email, UserStatus.ACTIVE)
@@ -37,7 +41,7 @@ public class UserService {
 
     @Transactional
     public User create(UserCreate userCreate) {
-        User user = User.from(userCreate);
+        User user = User.from(userCreate, uuidHolder);
         user = userRepsitory.save(user);
         certificationService.send(userCreate.getEmail(), user.getId(), user.getCertificationCode());
         return user;
@@ -54,7 +58,7 @@ public class UserService {
     @Transactional
     public void login(long id) {
         User user = userRepsitory.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
-        user = user.login();
+        user = user.login(clockHolder);
         userRepsitory.save(user);
     }
 
