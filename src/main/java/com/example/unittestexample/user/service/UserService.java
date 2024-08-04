@@ -6,7 +6,8 @@ import com.example.unittestexample.user.domain.UserStatus;
 import com.example.unittestexample.user.domain.UserCreate;
 import com.example.unittestexample.user.domain.UserUpdate;
 import com.example.unittestexample.user.infrastructure.UserEntity;
-import com.example.unittestexample.user.infrastructure.UserRepository;
+import com.example.unittestexample.user.infrastructure.UserJpaRepository;
+import com.example.unittestexample.user.service.port.UserRepsitory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,16 +21,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final JavaMailSender mailSender;
+    private final UserRepsitory userRepsitory;
+    private final CertificationService certificationService;
 
     public UserEntity getByEmail(String email) {
-        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+        return userRepsitory.findByEmailAndStatus(email, UserStatus.ACTIVE)
             .orElseThrow(() -> new ResourceNotFoundException("Users", email));
     }
 
     public UserEntity getById(long id) {
-        return userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+        return userRepsitory.findByIdAndStatus(id, UserStatus.ACTIVE)
             .orElseThrow(() -> new ResourceNotFoundException("Users", id));
     }
 
@@ -41,9 +42,8 @@ public class UserService {
         userEntity.setAddress(userCreate.getAddress());
         userEntity.setStatus(UserStatus.PENDING);
         userEntity.setCertificationCode(UUID.randomUUID().toString());
-        userEntity = userRepository.save(userEntity);
-        String certificationUrl = generateCertificationUrl(userEntity);
-        sendCertificationEmail(userCreate.getEmail(), certificationUrl);
+        userEntity = userRepsitory.save(userEntity);
+        certificationService.send(userCreate.getEmail(), userEntity.getId(), userEntity.getCertificationCode());
         return userEntity;
     }
 
@@ -52,34 +52,23 @@ public class UserService {
         UserEntity userEntity = getById(id);
         userEntity.setNickname(userUpdate.getNickname());
         userEntity.setAddress(userUpdate.getAddress());
-        userEntity = userRepository.save(userEntity);
+        userEntity = userRepsitory.save(userEntity);
         return userEntity;
     }
 
     @Transactional
     public void login(long id) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        UserEntity userEntity = userRepsitory.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
         userEntity.setLastLoginAt(Clock.systemUTC().millis());
     }
 
     @Transactional
     public void verifyEmail(long id, String certificationCode) {
-        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+        UserEntity userEntity = userRepsitory.findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
         if (!certificationCode.equals(userEntity.getCertificationCode())) {
             throw new CertificationCodeNotMatchedException();
         }
         userEntity.setStatus(UserStatus.ACTIVE);
     }
 
-    private void sendCertificationEmail(String email, String certificationUrl) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Please certify your email address");
-        message.setText("Please click the following link to certify your email address: " + certificationUrl);
-        mailSender.send(message);
-    }
-
-    private String generateCertificationUrl(UserEntity userEntity) {
-        return "http://localhost:8080/api/users/" + userEntity.getId() + "/verify?certificationCode=" + userEntity.getCertificationCode();
-    }
 }

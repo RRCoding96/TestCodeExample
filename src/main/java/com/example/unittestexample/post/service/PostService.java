@@ -4,7 +4,8 @@ import com.example.unittestexample.common.domain.exception.ResourceNotFoundExcep
 import com.example.unittestexample.post.domain.PostCreate;
 import com.example.unittestexample.post.domain.PostUpdate;
 import com.example.unittestexample.post.infrastructure.PostEntity;
-import com.example.unittestexample.post.infrastructure.PostRepository;
+import com.example.unittestexample.post.infrastructure.PostJpaRepository;
+import com.example.unittestexample.post.service.port.PostRepository;
 import com.example.unittestexample.user.infrastructure.UserEntity;
 import com.example.unittestexample.user.service.UserService;
 import lombok.RequiredArgsConstructor;
