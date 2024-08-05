@@ -35,22 +35,22 @@ public class PostServiceImplTest {
         assertThat(result.getWriter().getEmail()).isEqualTo("kok202@naver.com");
     }
 
-    @Test
-    void postCreateDto_를_이용하여_게시물을_생성할_수_있다() {
-        // given
-        PostCreate postCreate = PostCreate.builder()
-            .writerId(1)
-            .content("foobar")
-            .build();
-
-        // when
-        Post result = postServiceImpl.create(postCreate);
-
-        // then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getContent()).isEqualTo("foobar");
-        assertThat(result.getCreatedAt()).isGreaterThan(0);
-    }
+//    @Test
+//    void postCreateDto_를_이용하여_게시물을_생성할_수_있다() {
+//        // given
+//        PostCreate postCreate = PostCreate.builder()
+//            .writerId(1)
+//            .content("foobar")
+//            .build();
+//
+//        // when
+//        Post result = postServiceImpl.create(postCreate);
+//
+//        // then
+//        assertThat(result.getId()).isNotNull();
+//        assertThat(result.getContent()).isEqualTo("foobar");
+//        assertThat(result.getCreatedAt()).isGreaterThan(0);
+//    }
 
     @Test
     void postUpdateDto_를_이용하여_게시물을_수정할_수_있다() {

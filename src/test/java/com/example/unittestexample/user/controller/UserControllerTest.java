@@ -3,7 +3,6 @@ package com.example.unittestexample.user.controller;
 import com.example.unittestexample.common.domain.exception.CertificationCodeNotMatchedException;
 import com.example.unittestexample.common.domain.exception.ResourceNotFoundException;
 import com.example.unittestexample.mock.TestContainer;
-import com.example.unittestexample.user.controller.port.UserReadService;
 import com.example.unittestexample.user.controller.response.UserResponse;
 import com.example.unittestexample.user.domain.User;
 import com.example.unittestexample.user.domain.UserStatus;

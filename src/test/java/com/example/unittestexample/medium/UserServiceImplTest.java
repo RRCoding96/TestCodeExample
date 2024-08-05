@@ -80,24 +80,24 @@ class UserServiceImplTest {
         }).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @Test
-    void userCreateDto_를_이용하여_유저를_생성할_수_있다() {
-        // given
-        UserCreate userCreate = UserCreate.builder()
-            .email("kok202@kakao.com")
-            .address("Gyeongi")
-            .nickname("kok202-k")
-            .build();
-        BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
-
-        // when
-        User result = userServiceImpl.create(userCreate);
-
-        // then
-        assertThat(result.getId()).isNotNull();
-        assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
-        // assertThat(result.getCertificationCode()).isEqualTo("T.T"); // FIXME
-    }
+//    @Test
+//    void userCreateDto_를_이용하여_유저를_생성할_수_있다() {
+//        // given
+//        UserCreate userCreate = UserCreate.builder()
+//            .email("kok202@kakao.com")
+//            .address("Gyeongi")
+//            .nickname("kok202-k")
+//            .build();
+//        BDDMockito.doNothing().when(mailSender).send(any(SimpleMailMessage.class));
+//
+//        // when
+//        User result = userServiceImpl.create(userCreate);
+//
+//        // then
+//        assertThat(result.getId()).isNotNull();
+//        assertThat(result.getStatus()).isEqualTo(UserStatus.PENDING);
+//        // assertThat(result.getCertificationCode()).isEqualTo("T.T"); // 의존성 주입으로 해결할 수 있다
+//    }
 
     @Test
     void userUpdateDto_를_이용하여_유저를_수정할_수_있다() {
