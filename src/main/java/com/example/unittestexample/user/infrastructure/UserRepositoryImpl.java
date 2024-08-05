@@ -1,8 +1,9 @@
 package com.example.unittestexample.user.infrastructure;
 
+import com.example.unittestexample.common.domain.exception.ResourceNotFoundException;
 import com.example.unittestexample.user.domain.User;
 import com.example.unittestexample.user.domain.UserStatus;
-import com.example.unittestexample.user.service.port.UserRepsitory;
+import com.example.unittestexample.user.service.port.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepositoryImpl implements UserRepsitory {
+public class UserRepositoryImpl implements UserRepository {
 
     private final UserJpaRepository userJpaRepository;
 
@@ -34,4 +35,8 @@ public class UserRepositoryImpl implements UserRepsitory {
         return userJpaRepository.findByEmailAndStatus(email, userStatus).map(UserEntity::toModel);
     }
 
+    @Override
+    public User getById(long id) {
+        return findById(id).orElseThrow(() -> new ResourceNotFoundException("Users", id));
+    }
 }
