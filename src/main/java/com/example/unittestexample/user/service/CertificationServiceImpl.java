@@ -1,18 +1,17 @@
 package com.example.unittestexample.user.service;
 
-import com.example.unittestexample.user.infrastructure.UserEntity;
+import com.example.unittestexample.user.controller.port.CertificationService;
 import com.example.unittestexample.user.service.port.MailSender;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CertificationService {
+public class CertificationServiceImpl implements CertificationService {
 
     private final MailSender mailSender;
 
+    @Override
     public void send(String email, long userId, String certificationCode) {
         String certificationUrl = generateCertificationUrl(userId, certificationCode);
         String title = "Please certify your email address";
